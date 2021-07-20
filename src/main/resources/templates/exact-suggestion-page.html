@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="blocks/links :: links"/>
+<body>
+<header th:replace="blocks/header :: header"/>
+<div class="px-4 pt-5 my-5 text-center border-bottom">
+    <h1 class="display-4 fw-bold" th:text="${'Suggestion '+suggestion.id}"/>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4"
+           th:text="${'Admin Recommended to change time from '+suggestion.startDate.toString()+' to '+suggestion.endDate.toString()}"/>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+            <form th:action="${'/suggestion/accept/'+suggestion.id}" method="post">
+                <button type="submit" class="btn btn-success btn-lg px-4 me-sm-3">Accept</button>
+            </form>
+            <form th:action="${'/suggestion/reject/'+suggestion.id}" method="post">
+                <button type="submit" class="btn btn-outline-danger btn-lg px-4">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

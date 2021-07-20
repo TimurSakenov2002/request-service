@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="blocks/links :: links"/>
+
+<body>
+<header th:replace="blocks/header :: header"/>
+<div th:if="${isAdmin && departments.getRegion().getProvince()==province}" class="container py-5 text-center">
+    <h1 class="display-5 fw-bold">Admin Panel </h1>
+    <p class="fs-4">Using a series of utilities, you can create this jumbotron, just like the one in
+        previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to
+        your liking.</p>
+    </a>
+    <br>
+    <div class="small">Only Admins of Special Province can see this message</div>
+</div>
+<div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white shadow">
+    <a th:href="${'/region/'+departments.getRegion().getName()}"
+       class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+        <svg class="bi me-2" width="30" height="24">
+            <use xlink:href="#bootstrap"></use>
+        </svg>
+        <span class="fs-5 fw-semibold" th:text="${departments.getAddress()}"/>
+    </a>
+    <div class="info align-items-center text-center my-3 shadow">
+        <strong>Working Date</strong>
+        <div class=" mb-1 small"
+             th:text="${'From '+departments.getSchedule().getStartDay().name()+' to '+departments.getSchedule().getEndDay().name()}"/>
+        <strong>Working Time</strong>
+        <div class=" mb-1 small"
+             th:text="${'From '+departments.getSchedule().getStartTime().toString()+' to '+departments.getSchedule().getEndTime().toString()}"/>
+        <strong>Rest Time</strong>
+        <div class=" mb-1 small"
+             th:text="${'From '+departments.getSchedule().getRestTimeStart().toString()+' to '+departments.getSchedule().getEndTime().toString()}"/>
+    </div>
+    <div class="list-group list-group-flush border-bottom scrollarea">
+        <a th:href="${'/auditory/'+auditory.getId()}" class="list-group-item list-group-item-action py-3 lh-tight"
+           aria-current="true" th:each="auditory:${departments.getAuditoryList()}">
+            <div class="d-flex w-100 align-items-center justify-content-around">
+                <strong class="mb-1" th:text="${'Office '+auditory.getOfficeNumber()+' seats '+auditory.getSeats()}"/>
+            </div>
+            <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
+        </a>
+
+    </div>
+</div>
+
+
+</body>
+</html>

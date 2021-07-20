@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="blocks/links :: links"/>
+<body>
+<header th:replace="blocks/header :: header"/>
+<div class="d-flex justify-content-between mb-3">
+    <div class="ml-3"><a class="btn btn-primary"
+            th:href="${'/admin/auditory?id='+auditory.getId()+'&date='+prevDate}">Previous
+        Day</a>
+    </div>
+    <div class="mr-3" ><a class="btn btn-primary"
+                          th:href="${'/admin/auditory?id='+auditory.getId()+'&date='+nextDate}">Next
+        Day</a>
+    </div>
+</div>
+<div class="table-responsive">
+    <h1 class="text-center">Requests List</h1>
+    <br>
+
+    <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Start Time</th>
+            <th scope="col">End Time</th>
+            <th scope="col">Type</th>
+            <th scope="col">Duration Time</th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Conflict</th>
+            <th scope="col">Action 1</th>
+            <th scope="col">Action 2</th>
+            <th scope="col">Action 3</th>
+
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#arrays.length(requests)==0}" th:text="${'No requests for '+date.toString()}"/>
+
+        <tr th:unless="${#arrays.length(requests)==0}" th:each="result,i:${requests}">
+            <td class="border border-dark p-1"><strong th:text="${result.getId()}"/></td>
+            <td th:text="${result.startDate.toLocaleString()}"/>
+            <td th:text="${result.endDate.toLocaleString()}"/>
+            <td th:text="${result.sessionType.getName()}"/>
+            <td th:text="${intervals.get(i.index).getHour()+' h : '+intervals.get(i.index).getMinute()+' m'}"/>
+            <td th:text="${result.getUser().getPhoneNumber()}"/>
+            <td th:if="${conflicts.containsKey(result.getId())}"
+                th:text="${'Conflict with '+conflicts.get(result.getId())}"/>
+            <td th:unless="${conflicts.containsKey(result.getId())}">No Conflict</td>
+            <td>
+                <form action="/admin/auditory" method="post">
+                    <input type="hidden" name="id" th:value="${result.getAuditory().getId()}">
+                    <input type="hidden" name="result" th:value="${result.getRequestResult().getId()}">
+                    <input type="hidden" name="accepted" value="true">
+
+                    <button class="btn btn-success" type="submit">Accept</button>
+                </form>
+            </td>
+            <td>
+                <form action="/admin/auditory" method="post">
+                    <input type="hidden" name="accepted" value="false">
+                    <input type="hidden" name="id" th:value="${result.getAuditory().getId()}">
+                    <input type="hidden" name="result" th:value="${result.getRequestResult().getId()}">
+
+                    <button class="btn btn-danger" type="submit">Reject</button>
+                </form>
+            </td>
+            <td th:if="${conflicts.containsKey(result.getId())}">
+                <button class="btn btn-info" type="button" data-bs-toggle="modal"
+                        th:data-bs-target="${'#exampleModal'+result.getRequestResult().getId()}">Resolve
+                </button>
+            </td>
+            <div class="modal fade" th:id="${'exampleModal'+result.getRequestResult().getId()}" tabindex="-1"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Recommendation </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="${'/admin/suggestion/'+auditory.id+'/'+result.requestResult.id}"
+                                  th:object="${form}" class="form-control align-items-center" id="form"
+                                  method="post">
+
+                                <div class="form-floating mb-3">
+                                    <input th:field="*{startDate}" type="datetime-local" class="form-control"
+                                           id="floatingInput">
+                                    <label for="floatingInput">Start date</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input th:field="*{endDate}" type="datetime-local" class="form-control"
+                                           id="floatingInput2">
+                                    <label for="floatingInput2">End date</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </tr>
+        </a>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

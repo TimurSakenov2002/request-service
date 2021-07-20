@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="blocks/links :: links"/>
+<style>
+    .chart-container {
+        margin: auto;
+        width: 50%;
+        height: 50%;
+    }
+</style>
+<body>
+<header th:replace="blocks/header :: header"/>
+<div class="card chart-container">
+    <canvas id="chart"></canvas>
+</div>
+
+<div class="list-group list-group-flush border-bottom scrollarea">
+    <a th:href="${'/admin/auditory?id='+auditory.getId()+'&date='+date}" class="list-group-item list-group-item-action py-3 lh-tight"
+       aria-current="true" th:each="auditory,i:${auditoryList}">
+        <div class="d-flex w-100 align-items-center justify-content-around">
+            <strong class="mb-1" th:text="${'Office '+auditory.getOfficeNumber()+' seats '+auditory.getSeats()}"/>
+        </div>
+        <div class="col-10 mb-1 small" th:text="${'Requests '+reqs.get(i.index)}"/>
+    </a>
+
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js">
+</script>
+<script>
+    // const ctx = document.getElementById("chart").getContext('2d');
+    // const myChart = new Chart(ctx, {
+    //     type: 'bar',
+    //     data: {
+    //         labels: ["sunday", "monday", "tuesday",
+    //             "wednesday", "thursday", "friday", "saturday"],
+    //         datasets: [{
+    //             label: 'Last week',
+    //             backgroundColor: 'rgba(161, 198, 247, 1)',
+    //             borderColor: 'rgb(47, 128, 237)',
+    //             data: [3000, 4000, 2000, 5000, 8000, 9000, 2000],
+    //         }]
+    //     },
+    //     options: {
+    //         scales: {
+    //             yAxes: [{
+    //                 ticks: {
+    //                     beginAtZero: true,
+    //                 }
+    //             }]
+    //         }
+    //     },
+    // });
+    const ctx = document.getElementById("chart").getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["1.1.2021", "2.1.2021"],
+            datasets: [{
+                label: 'First Time Visitor England',
+                data: [10, 3],
+                stack: "first-time-visitors",
+                backgroundColor: "#f5a0a7",
+                categoryPercentage: 1
+            },
+                {
+                    label: 'Repeating Visitors England',
+                    data: [20, 6],
+                    stack: "repeat-visitors",
+                    backgroundColor: "#e75177",
+                    categoryPercentage: 1
+                },
+                {
+                    label: 'First Time Visitor Sweden',
+                    data: [7, 0],
+                    stack: "first-time-visitors",
+                    backgroundColor: "#924565",
+                    categoryPercentage: 1
+                },
+                {
+                    label: 'Repeating Visitors Sweden',
+                    data: [9, 16],
+                    stack: "repeat-visitors",
+                    backgroundColor: "#2979a7",
+                    categoryPercentage: 1
+                }
+            ]
+        },
+        options: {
+            tooltips: {
+                mode: 'x'
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        display: false
+                    }
+                },
+                    {
+                        type: 'category',
+                        offset: true,
+                        labels: ['first-time-visitors', 'repeat-visitors', 'first-time-visitors', 'repeat-visitors'],
+                        gridLines: {
+                            display: false
+                        }
+                    },
+                    {
+                        offset: true,
+                        gridLines: {
+                            display: false
+                        }
+                    }
+                ],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+</body>
+</html>
